@@ -14,11 +14,29 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Add a showSnippet handle function
+func showSnippet(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("Display a specific snippet..."))
+	if err != nil {
+		return
+	}
+}
+
+// Add a createSnippet handle function
+func createSnippet(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("Create a new snippet..."))
+	if err != nil {
+		return
+	}
+}
+
 func main() {
 	// Use the http.NewServeMux() function to initialize a new servemux, then
 	// register the home function as the handler for the "/" URL pattern.
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", home)
+	mux.HandleFunc("/snippet", showSnippet)
+	mux.HandleFunc("/snippet/create", createSnippet)
 
 	// Use the http.ListenAndServe() function to start a new web server. We pass
 	// two parameters: The TCP network address to listen on (in this case ":4000")
