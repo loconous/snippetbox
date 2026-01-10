@@ -33,6 +33,15 @@ func showSnippet(w http.ResponseWriter, r *http.Request) {
 
 // Add a createSnippet handle function
 func createSnippet(w http.ResponseWriter, r *http.Request) {
+	// Use r.Method to check whether the request is using the POST or not.
+	// If it's not, use the w.WriteHeader() method to send a 405 code and
+	// the w.Write() method to write a "Method Not Allowed" response body.
+	// WE then return from the function so that the subsequent code is not executed.
+	if r.Method != "POST" {
+		w.WriteHeader(405)
+		w.Write([]byte("Method Not Allowed"))
+		return
+	}
 	_, err := w.Write([]byte("Create a new snippet..."))
 	if err != nil {
 		return
@@ -52,6 +61,7 @@ func main() {
 	// and the servemux we just created. If http.ListenAndServe() returns an error
 	// we use the log.Fatal() function to log the error message and exit.
 	log.Println("Starting server on :4000")
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
+	if err := http.ListenAndServe(":4000", mux); err != nil {
+		log.Fatal(err)
+	}
 }
