@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -12,8 +14,22 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := w.Write([]byte("Hello from Snippetbox"))
+	// Use the template.ParseFiles() function to read the template file into a
+	// template set. If there's an error, we log the detailed error message and
+	// the http.Error() function to send a gneric 500 Internal Server Error
+	// response to the user.
+	ts, err := template.ParseFiles("./ui/html/home.page.tmpl.html")
 	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// We then use the Execute() method on the template set to write the template
+	// content as the response body. The last parameter to Execute() represents
+	// dynamic data that we want to pass in, which for now we''ll leave as nil.
+	err = ts.Execute(w, nil)
+	if err != nil {
+		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
